@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "488612957879",
+    "firebase_url": "https://statoos-22907.firebaseio.com",
+    "project_id": "statoos-22907",
+    "storage_bucket": "statoos-22907.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488612957879:android:3ebe555c6c222f2a",
+        "android_client_info": {
+          "package_name": "com.vs.Statoos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "488612957879-h77dfcr0g7qpcnpbsge9h4k5iigijtb9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJcztvTP_9ti0ceX7QJQv71_ghQZv11eU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
