@@ -32,7 +32,7 @@ import java.io.IOException;
 
 public class PostImageToInstagram extends AppCompatActivity {
     private AdView mAdViewPost;
-    ImageView imageView,postImage;
+    ImageView imageView,postImageToFacebook;
     Button saveGallery;
     String ImagePath,data,filename,filePath,fontStyle="Helvetica_Neue.ttf";
     Bitmap bmp,image, finalImage;
@@ -48,7 +48,7 @@ public class PostImageToInstagram extends AppCompatActivity {
         adView.setAdSize(AdSize.BANNER);
 
         mAdViewPost = (AdView) findViewById(R.id.adViewPost);
-        postImage = (ImageView) findViewById(R.id.postImage);
+        postImageToFacebook = (ImageView) findViewById(R.id.postImageToFacebook);
         saveGallery = (Button) findViewById(R.id.saveToGallary);
         imageView = (ImageView) findViewById(R.id.image1);
         Intent intent = getIntent();
@@ -89,13 +89,13 @@ public class PostImageToInstagram extends AppCompatActivity {
             }
         });
 
-        postImage.setOnClickListener(new View.OnClickListener() {
+        postImageToFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SaveImage saveimg = new SaveImage();
+                //SaveImage saveimg = new SaveImage();
                 // pass bit and filename
-                saveimg.storeImage(image, filename);
-                sendImageToInstaGram();
+                //saveimg.storeImage(image, filename);
+                sendImageToFacebook();
             }
         });
 
@@ -182,6 +182,10 @@ public class PostImageToInstagram extends AppCompatActivity {
         share.setType("image/*");
         share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(Intent.createChooser(share, "Share image File"));
+
+    }
+
+    public void sendImageToFacebook() {
 
     }
 

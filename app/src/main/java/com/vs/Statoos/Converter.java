@@ -13,6 +13,8 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
+import java.io.ByteArrayOutputStream;
+
 /**
  * Created by Android-Dev2 on 2/20/2018.
  */
@@ -45,15 +47,15 @@ public class Converter {
 
         int textWidth = (int) paint.measureText(text);
         float baseline = (int) (-paint.ascent() + 2f); // ascent() is negative
-        int width = 300;
-        int padding = 30;
+        int width = 330;
+        int padding = 100;
         float spacingMultiplier = 1;
         float spacingAddition = 0;
         boolean includePadding = false;
 
 
         StaticLayout staticLayout = new StaticLayout(text, 0, text.length(),
-                paint, width, Layout.Alignment.ALIGN_NORMAL, 1.0f,
+                paint, width, Layout.Alignment.ALIGN_CENTER, 1.0f,
                 1.0f, false);
 
         //StaticLayout staticLayout = new StaticLayout(text, paint, width, alignment, spacingMultiplier, spacingAddition, includePadding);
@@ -96,12 +98,27 @@ public class Converter {
         canvas.drawBitmap(image, 0, 0, p);*/
         Paint p = new Paint();
         if(backgroundImage != 0){
-
+            Bitmap b2 = null;
+            int AdditionHeightWidth = 0;
             mBackground = BitmapFactory.decodeResource(ctx.getResources(), backgroundImage).copy(Bitmap.Config.ARGB_8888, true);
-            canvas = new Canvas(mBackground);
+            // original measurements
+            int origWidth = mBackground.getWidth();
+            int origHeight = mBackground.getHeight();
+            final int destWidth = 400;
+            if(origWidth > destWidth){
+                if(height > 400){
+                     AdditionHeightWidth = 100;
+                }
+                //origHeight/( origWidth / destWidth ) + AdditionHeightWidth
+                int destHeight = height;
+                b2 = Bitmap.createScaledBitmap(mBackground, destWidth + AdditionHeightWidth, destHeight, false);
+                ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                b2.compress(Bitmap.CompressFormat.JPEG,80, outStream);
+            }
+            canvas = new Canvas(b2);
             canvas.drawBitmap(image, 0, 0, p);
             //canvas.drawBitmap(image, 0, 0, p);
-            returnedBitmap = mBackground;
+            returnedBitmap = b2;
 
         } else {
             canvas = new Canvas(image);

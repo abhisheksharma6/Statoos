@@ -40,6 +40,8 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -49,7 +51,9 @@ import java.io.FileNotFoundException;
     Button mybtn;
     Bitmap bmp, image;
     TextView numberOfCharacters;
-    TextView whiteColor, blueColor, greenColor, redColor, yellowColor, blackColor, backgroundImage, circularWhiteColor, circularBlueColor, circularGreenColor, circularRedColor, circularYellowColor, circularBlackColor;
+    TextView whiteColor, blueColor, greenColor, redColor, yellowColor, blackColor, backgroundImage, backgroundImage2,
+             backgroundImage3, backgroundImage4, backgroundImage5, backgroundImage8,
+            circularWhiteColor, circularBlueColor, circularGreenColor, circularRedColor, circularYellowColor, circularBlackColor;
     String filename, value;
     int currentLine;
      private AdView mAdViewMain;
@@ -92,6 +96,11 @@ import java.io.FileNotFoundException;
         yellowColor = (TextView) findViewById(R.id.yellow_color);
         blackColor = (TextView) findViewById(R.id.black_color);
         backgroundImage = (TextView) findViewById(R.id.background_image);
+        backgroundImage2 = (TextView) findViewById(R.id.background_image2);
+        backgroundImage3 = (TextView) findViewById(R.id.background_image3);
+        backgroundImage4 = (TextView) findViewById(R.id.background_image4);
+        backgroundImage5 = (TextView) findViewById(R.id.background_image5);
+        backgroundImage8 = (TextView) findViewById(R.id.background_image8);
         imageViewText = (ImageView) findViewById(R.id.imageViewText);
         textColorLayout = (LinearLayout) findViewById(R.id.textColorLayout);
         regularText = (ImageView) findViewById(R.id.regularText);
@@ -277,6 +286,51 @@ import java.io.FileNotFoundException;
                 v.setBackgroundResource(R.drawable.backgroundimage);
                 str_et.setBackground(v.getBackground());
                 bitmapBackground = R.drawable.backgroundimage;
+            }
+        });
+
+        backgroundImage2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                v.setBackgroundResource(R.drawable.backgroundimage2);
+                str_et.setBackground(v.getBackground());
+                bitmapBackground = R.drawable.backgroundimage2;
+            }
+        });
+
+        backgroundImage3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                v.setBackgroundResource(R.drawable.backgroundimage3);
+                str_et.setBackground(v.getBackground());
+                bitmapBackground = R.drawable.backgroundimage3;
+            }
+        });
+
+        backgroundImage4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                v.setBackgroundResource(R.drawable.backgroundimage4);
+                str_et.setBackground(v.getBackground());
+                bitmapBackground = R.drawable.backgroundimage4;
+            }
+        });
+
+        backgroundImage5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                v.setBackgroundResource(R.drawable.backgroundimage5);
+                str_et.setBackground(v.getBackground());
+                bitmapBackground = R.drawable.backgroundimage5;
+            }
+        });
+
+        backgroundImage8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                v.setBackgroundResource(R.drawable.backgroundimage8);
+                str_et.setBackground(v.getBackground());
+                bitmapBackground = R.drawable.backgroundimage8;
             }
         });
 
@@ -634,7 +688,9 @@ import java.io.FileNotFoundException;
 
             setEditTextMaxLength(250 - characterMinus);
             numberOfCharacters.setText(String.valueOf(250 - (s.length() + characterMinus)));*/
-            numberOfCharacters.setText(String.valueOf(250 - s.length()));
+            if(250 - s.length() > 0){
+                numberOfCharacters.setText(String.valueOf(250 - s.length()));
+            }
 
             if (null != str_et.getLayout() && str_et.getLayout().getLineCount() > 8) {
                 str_et.getText().delete(str_et.getText().length() - 1, str_et.getText().length());
