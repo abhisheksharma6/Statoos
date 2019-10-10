@@ -55,8 +55,8 @@
         android:textSize="16sp"
         android:layout_gravity="center"
         android:hint="What's up?"
-        android:textColorHint="#000000"
-        android:textColor="#000000"
+        android:textColorHint="#000"
+        android:textColor="#000"
         android:inputType="textMultiLine"
         android:lines="8"
         android:layout_margin="20dp"
@@ -74,6 +74,168 @@
         android:layout_marginRight="20dp"
         android:text="250"
         />
+
+    <LinearLayout android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/type"
+            android:id="@+id/imageViewText"
+            >
+
+        </ImageView>
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/white_color"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/edittext_background"
+            />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/blue_color"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/edittext_background_blue"
+            />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/green_color"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/edittext_background_green"
+            />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/red_color"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/edittext_background_red"
+            />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/yellow_color"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/edittext_background_yellow"
+            />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/black_color"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/edittext_background_black"
+            />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/background_image"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/backgroundimage"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:id="@+id/textColorLayout"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/text"
+            android:id="@+id/regularText"
+            >
+
+        </ImageView>
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/bold"
+            android:id="@+id/boldText"
+            >
+
+        </ImageView>
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/italic"
+            android:id="@+id/italicText"
+            >
+
+        </ImageView>
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/white_color_circle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/circular_background_white"
+            />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/blue_color_circle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/circular_background_blue"
+            />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/green_color_circle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/circular_background_green"
+            />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/red_color_circle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/circular_background_red"
+            />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/yellow_color_circle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/circular_background_yellow"
+            />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/black_color_circle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/circular_background_black"
+            />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_id"
@@ -104,7 +266,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="10dp"
             ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-5946413716271057/6675827795">
+            ads:adUnitId="ca-app-pub-8425819219373897/3252244642">
         </com.google.android.gms.ads.AdView>
 
 

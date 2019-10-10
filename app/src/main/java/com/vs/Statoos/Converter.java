@@ -1,7 +1,12 @@
 package com.vs.Statoos;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.text.Layout;
@@ -16,9 +21,17 @@ public class Converter {
 
     int height;
     float heightHalf;
+    Bitmap mBackground;
+    Context ctx;
+    Canvas canvas;
+    Bitmap image, returnedBitmap;
+
+    public Converter(Context context){
+        ctx = context;
+    }
 
     public Bitmap textAsBitmap(String text, float textSize, float stroke,
-                               int color, Typeface typeface) {
+                               int color, int btmColor, Typeface typeface, int backgroundImage) {
 
         TextPaint paint = new TextPaint();
         paint.setColor(color);
@@ -71,16 +84,39 @@ public class Converter {
         }*/
 
 
-        Bitmap image = Bitmap
+       image = Bitmap
                 .createBitmap(width+padding, height, Bitmap.Config.ARGB_8888);
 
-        Canvas canvas = new Canvas(image);
+
+        //canvas = new Canvas(image);
+        /*Paint p = new Paint();
+        ColorFilter filter = new LightingColorFilter(btmColor, 1);
+        p.setColorFilter(filter);
         canvas.drawARGB(0xFF, 0xFF, 0xFF, 0xFF);
+        canvas.drawBitmap(image, 0, 0, p);*/
+        Paint p = new Paint();
+        if(backgroundImage != 0){
+
+            mBackground = BitmapFactory.decodeResource(ctx.getResources(), backgroundImage).copy(Bitmap.Config.ARGB_8888, true);
+            canvas = new Canvas(mBackground);
+            canvas.drawBitmap(image, 0, 0, p);
+            //canvas.drawBitmap(image, 0, 0, p);
+            returnedBitmap = mBackground;
+
+        } else {
+            canvas = new Canvas(image);
+            ColorFilter filter = new LightingColorFilter(btmColor, 1);
+            p.setColorFilter(filter);
+            canvas.drawARGB(0xFF, 0xFF, 0xFF, 0xFF);
+            canvas.drawBitmap(image, 0, 0, p);
+            returnedBitmap = image;
+
+        }
+
         canvas.translate(19.0f, heightHalf);
         staticLayout.draw(canvas);
 
-        return image;
-
+        return returnedBitmap;
     }
 
     // Adding Border to bitmap

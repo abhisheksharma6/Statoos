@@ -11,6 +11,7 @@ import java.util.Calendar;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +28,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,21 +49,33 @@ import java.io.FileNotFoundException;
     Button mybtn;
     Bitmap bmp, image;
     TextView numberOfCharacters;
+    TextView whiteColor, blueColor, greenColor, redColor, yellowColor, blackColor, backgroundImage, circularWhiteColor, circularBlueColor, circularGreenColor, circularRedColor, circularYellowColor, circularBlackColor;
     String filename, value;
     int currentLine;
      private AdView mAdViewMain;
      private boolean isReached = false;
      int characterMinus;
+     int textColor = -16777216;
+     int btmColor = -1;
+     int bitmapBackground = 0;
+     View v;
+     LinearLayout textColorLayout;
+     ImageView imageViewText, regularText, boldText, italicText;
+     private boolean isOpened = false;
+     Typeface type;
+     String fontStyle = "Helvetica_Neue.ttf";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MobileAds.initialize(this,"ca-app-pub-5946413716271057~6101591659");
+        MobileAds.initialize(this,"ca-app-pub-8425819219373897~8696143019");
         AdView adView = new AdView(this);
         adView.setAdSize(AdSize.BANNER);
 
         mAdViewMain = (AdView) findViewById(R.id.adViewMain);
-
+        v = new View(getApplicationContext());
         str_et = (EditText) findViewById(R.id.str_id);
        // str_et.setSingleLine(false);
       //  str_et.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_SUBJECT);
@@ -70,6 +85,26 @@ import java.io.FileNotFoundException;
         str_et.setFilters(filters);*/
         mybtn = (Button) findViewById(R.id.btn_id);
         numberOfCharacters = (TextView) findViewById(R.id.numberOfCharacters);
+        whiteColor = (TextView) findViewById(R.id.white_color);
+        blueColor = (TextView) findViewById(R.id.blue_color);
+        greenColor = (TextView) findViewById(R.id.green_color);
+        redColor = (TextView) findViewById(R.id.red_color);
+        yellowColor = (TextView) findViewById(R.id.yellow_color);
+        blackColor = (TextView) findViewById(R.id.black_color);
+        backgroundImage = (TextView) findViewById(R.id.background_image);
+        imageViewText = (ImageView) findViewById(R.id.imageViewText);
+        textColorLayout = (LinearLayout) findViewById(R.id.textColorLayout);
+        regularText = (ImageView) findViewById(R.id.regularText);
+        boldText = (ImageView) findViewById(R.id.boldText);
+        italicText = (ImageView) findViewById(R.id.italicText);
+        circularWhiteColor = (TextView) findViewById(R.id.white_color_circle);
+        circularBlueColor = (TextView) findViewById(R.id.blue_color_circle);
+        circularGreenColor = (TextView) findViewById(R.id.green_color_circle);
+        circularRedColor = (TextView) findViewById(R.id.red_color_circle);
+        circularYellowColor = (TextView) findViewById(R.id.yellow_color_circle);
+        circularBlackColor = (TextView) findViewById(R.id.black_color_circle);
+
+        type = Typeface.createFromAsset(getAssets(),"Helvetica_Neue.ttf");
 
         //addTestDevice("748303DC66299A698741D5BAE5E9CBA2")
 
@@ -84,22 +119,22 @@ import java.io.FileNotFoundException;
 
             @Override
             public void onAdClosed() {
-                Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdLeftApplication() {
-                Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdOpened() {
-                Toast.makeText(getApplicationContext(), "Ad is opened!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Ad is opened!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -137,13 +172,13 @@ import java.io.FileNotFoundException;
                 //currentCharacterLength = str_et.getText().toString().trim().length();
 
                 // Convert Text to Image
-                Converter convert = new Converter();
+                Converter convert = new Converter(getApplicationContext());
 
                 // text , size , stroke ,color,typeface
 
                 //converting text to bitmap image here
-                 bmp = convert.textAsBitmap(data, 24, 5, Color.BLACK,
-                        Typeface.createFromAsset(getAssets(), "Helvetica_Neue.ttf"));
+                 bmp = convert.textAsBitmap(data, 32, 5, textColor, btmColor,
+                        type, bitmapBackground);
 
                 //passing border size 0 because we dont need the image borders
                  image = convert.addBorder(bmp, 0, Color.BLACK);
@@ -166,8 +201,179 @@ import java.io.FileNotFoundException;
 
                 Intent intent = new Intent(MainActivity.this, PostImageToInstagram.class);
                 intent.putExtra("BitmapImage", data);
+                intent.putExtra("FontStyle", fontStyle);
+                intent.putExtra("textColor1", textColor);
+                intent.putExtra("btmColor1", btmColor);
+                intent.putExtra("BackgroundImage", bitmapBackground);
                 startActivity(intent);
 
+            }
+        });
+
+        whiteColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                v.setBackgroundResource(R.drawable.edittext_background);
+                str_et.setBackground(v.getBackground());
+                btmColor = Color.WHITE;
+                bitmapBackground = 0;
+            }
+        });
+
+        blueColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                v.setBackgroundResource(R.drawable.edittext_background_blue);
+                str_et.setBackground(v.getBackground());
+                btmColor = Color.BLUE;
+                bitmapBackground = 0;
+            }
+        });
+
+        greenColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                v.setBackgroundResource(R.drawable.edittext_background_green);
+                str_et.setBackground(v.getBackground());
+                btmColor = Color.GREEN;
+                bitmapBackground = 0;
+            }
+        });
+
+        redColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                v.setBackgroundResource(R.drawable.edittext_background_red);
+                str_et.setBackground(v.getBackground());
+                btmColor = Color.RED;
+                bitmapBackground = 0;
+            }
+        });
+
+        yellowColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                v.setBackgroundResource(R.drawable.edittext_background_yellow);
+                str_et.setBackground(v.getBackground());
+                btmColor = Color.YELLOW;
+                bitmapBackground = 0;
+            }
+        });
+
+        blackColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                v.setBackgroundResource(R.drawable.edittext_background_black);
+                str_et.setBackground(v.getBackground());
+                btmColor = Color.BLACK;
+                bitmapBackground = 0;
+            }
+        });
+
+        backgroundImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                v.setBackgroundResource(R.drawable.backgroundimage);
+                str_et.setBackground(v.getBackground());
+                bitmapBackground = R.drawable.backgroundimage;
+            }
+        });
+
+        imageViewText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isOpened = !isOpened;
+                if(isOpened){
+                    textColorLayout.setVisibility(LinearLayout.VISIBLE);
+                } else {
+                    textColorLayout.setVisibility(LinearLayout.GONE);
+                }
+
+            }
+        });
+
+        regularText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                type = Typeface.createFromAsset(getAssets(),"Helvetica_Neue.ttf");
+                str_et.setTypeface(type);
+                fontStyle = "Helvetica_Neue.ttf";
+
+            }
+        });
+
+        boldText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                type = Typeface.createFromAsset(getAssets(),"AvenirNext-Bold.ttf");
+                str_et.setTypeface(type);
+                fontStyle = "AvenirNext-Bold.ttf";
+
+            }
+        });
+
+        italicText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                type = Typeface.createFromAsset(getAssets(),"hemi head bd it.ttf");
+                str_et.setTypeface(type);
+                fontStyle = "hemi head bd it.ttf";
+            }
+        });
+
+        circularWhiteColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textColor = Color.WHITE;
+                str_et.setTextColor(textColor);
+                str_et.setHintTextColor(textColor);
+
+            }
+        });
+
+        circularBlueColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                 textColor = Color.BLUE;
+                 str_et.setTextColor(textColor);
+                 str_et.setHintTextColor(textColor);
+            }
+        });
+
+        circularGreenColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                  textColor = Color.GREEN;
+                  str_et.setTextColor(textColor);
+                  str_et.setHintTextColor(textColor);
+            }
+        });
+
+        circularRedColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                  textColor = Color.RED;
+                  str_et.setTextColor(textColor);
+                  str_et.setHintTextColor(textColor);
+            }
+        });
+
+        circularYellowColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                   textColor = Color.YELLOW;
+                   str_et.setTextColor(textColor);
+                   str_et.setHintTextColor(textColor);
+            }
+        });
+
+        circularBlackColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                   textColor = Color.BLACK;
+                   str_et.setTextColor(textColor);
+                   str_et.setHintTextColor(textColor);
             }
         });
 
@@ -518,10 +724,7 @@ import java.io.FileNotFoundException;
          filterArray[0] = new InputFilter.LengthFilter(length);
          str_et.setFilters(filterArray);*/
      }
-
-
-
-
+     
 
      @Override
      public void onPause() {

@@ -43,7 +43,6 @@
        android:layout_width="match_parent"
        android:layout_margin="10dp"
        android:layout_height="200dp"
-       android:layout_gravity="center"
        android:padding="5dp"
        />
 
@@ -88,7 +87,7 @@
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
         android:layout_marginBottom="10dp"
-        ads:adUnitId="ca-app-pub-5946413716271057/7773765978">
+        ads:adUnitId="ca-app-pub-8425819219373897/9212407515">
     </com.google.android.gms.ads.AdView>
 
 

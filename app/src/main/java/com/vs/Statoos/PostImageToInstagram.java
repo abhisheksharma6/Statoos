@@ -34,9 +34,10 @@ public class PostImageToInstagram extends AppCompatActivity {
     private AdView mAdViewPost;
     ImageView imageView,postImage;
     Button saveGallery;
-    String ImagePath,data,filename,filePath;
+    String ImagePath,data,filename,filePath,fontStyle="Helvetica_Neue.ttf";
     Bitmap bmp,image, finalImage;
     int width;
+    int textColor, btmColor, backgroundImage=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +54,16 @@ public class PostImageToInstagram extends AppCompatActivity {
         Intent intent = getIntent();
      //   Bitmap image = (Bitmap) intent.getParcelableExtra("BitmapImage");
         data =  intent.getStringExtra("BitmapImage");
-        Converter convert = new Converter();
+        fontStyle = intent.getStringExtra("FontStyle");
+        textColor = intent.getIntExtra("textColor1", 0);
+        btmColor = intent.getIntExtra("btmColor1", 0);
+        backgroundImage = intent.getIntExtra("BackgroundImage", 0);
+
+        Converter convert = new Converter(getApplicationContext());
 
         // text , size , stroke ,color,typeface
-        bmp = convert.textAsBitmap(data, 24, 5, Color.BLACK,
-                Typeface.createFromAsset(getAssets(), "Helvetica_Neue.ttf"));
+        bmp = convert.textAsBitmap(data, 32, 5, textColor, btmColor,
+                Typeface.createFromAsset(getAssets(), fontStyle), backgroundImage);
         image = convert.addBorder(bmp, 0, Color.BLACK);
        // finalImage = createSquaredBitmap(image);
         //BitmapDrawable ob = new BitmapDrawable(getResources(), image);
