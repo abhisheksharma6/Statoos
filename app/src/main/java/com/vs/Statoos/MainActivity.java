@@ -391,40 +391,18 @@ import java.io.FileNotFoundException;
             @Override
             public void onClick(View view) {
                 bitmapBackground = 0;
+                File dir;
                 c = Calendar.getInstance();
                 f = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
-
+                dir = new File(Environment.getExternalStorageDirectory() + "/Statoos/Camera");
+                if(!dir.exists())
+                    dir.mkdirs();
                 //cameraImageUri = Uri.fromFile(new File(dir, "Camera_image_" + f.format(c.getTime())));
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                File dir = new File(Environment.getExternalStorageDirectory()+ "/Statoos/" + "Camera_image_" + f.format(c.getTime()) + ".jpeg");
+                dir = new File(Environment.getExternalStorageDirectory()+ "/Statoos/Camera/" + "Camera_image_" + f.format(c.getTime()) + ".jpeg");
                 cameraImageUri = Uri.fromFile(dir);
                 cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                //f.mkdirs();
-                //String filePath1 = f + "/"  + filename + ".jpeg";
-                //FileOutputStream fileOutputStream = null;
-                //try {
-                  //  fileOutputStream = new FileOutputStream(filePath1);
-                //} catch (FileNotFoundException e) {
-                  //  e.printStackTrace();
-               // }
-
-                //BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream);
-
-                // compress image according to your format
-                //imageData.compress(Bitmap.CompressFormat.JPEG, 70, bos);
-
-                //try {
-                 //   bos.flush();
-                //} catch (IOException e) {
-                 //   e.printStackTrace();
-               // }
-                //try {
-                   // bos.close();
-               // } catch (IOException e) {
-                   // e.printStackTrace();
-                //}
-
 
             }
         });
@@ -523,20 +501,9 @@ import java.io.FileNotFoundException;
                 return;
             }
         }
-
-        /*int result = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int result2 = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE);
-        int result3 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        if (result == PackageManager.PERMISSION_GRANTED && result2 == PackageManager.PERMISSION_GRANTED
-                && result3 == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        else {
-            return false;
-        }*/
-
     }
 
+    //This function is not used.
     protected void requestPermission() {
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -609,11 +576,7 @@ import java.io.FileNotFoundException;
                      if(cameraImageUri != null){
                          picturePath = cameraImageUri.getPath();
                          str_et.setBackground(Drawable.createFromPath(picturePath));
-                         //Bitmap photo = (Bitmap) data.getExtras().get("data");
-                         //Drawable drawable=new BitmapDrawable(photo);
-                         //str_et.setBackground(drawable);
                      }
-
                  }
          }
 
