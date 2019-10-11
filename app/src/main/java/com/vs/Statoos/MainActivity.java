@@ -1,6 +1,7 @@
 package com.vs.Statoos;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,9 +10,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -75,12 +81,18 @@ import java.io.FileNotFoundException;
      private static final int MY_CAMERA_PERMISSION_CODE = 1001;
      Typeface type;
      String fontStyle = "Helvetica_Neue.ttf";
+     Calendar c;
+     SimpleDateFormat f;
+     private Uri cameraImageUri;
+     public static final int MULTIPLE_PERMISSIONS = 1;
+     String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}; // List of permissions required
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkPermission();
         MobileAds.initialize(this,"ca-app-pub-8425819219373897~8696143019");
         AdView adView = new AdView(this);
         adView.setAdSize(AdSize.BANNER);
@@ -157,28 +169,23 @@ import java.io.FileNotFoundException;
         });
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkPermission()) {
-                //do your work
-
-                File test = new File(Environment.getExternalStorageDirectory() + "/Statoos");
-                if (!test.exists()) {
-                    try {
-                        if (test.mkdir()) {
-                            Log.d("xxx", "directory created");
-                        } else {
-                            Log.d("xxx", "directory creation failed");
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+        File test = new File(Environment.getExternalStorageDirectory() + "/Statoos");
+        if (!test.exists()) {
+            try {
+                if (test.mkdir()) {
+                    Log.d("xxx", "directory created");
                 } else {
-                    Log.d("xxx", "directory already present");
+                    Log.d("xxx", "directory creation failed");
                 }
-            } else {
-                requestPermission();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        } else {
+            Log.d("xxx", "directory already present");
         }
+
+
+
 
         str_et.addTextChangedListener(mTextEditorWatcher);
         mybtn.setOnClickListener(new View.OnClickListener() {
@@ -203,8 +210,8 @@ import java.io.FileNotFoundException;
 
                 // file name appending with system date
 
-                    Calendar c = Calendar.getInstance();
-                    SimpleDateFormat f = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
+                    c = Calendar.getInstance();
+                    f = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
                     filename = "ScreenShot_" + f.format(c.getTime());
 
                 /*String filePath = Environment.getExternalStorageDirectory() + "/status_king" + "/" + filename
@@ -384,8 +391,41 @@ import java.io.FileNotFoundException;
             @Override
             public void onClick(View view) {
                 bitmapBackground = 0;
+                c = Calendar.getInstance();
+                f = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
+
+                //cameraImageUri = Uri.fromFile(new File(dir, "Camera_image_" + f.format(c.getTime())));
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                File dir = new File(Environment.getExternalStorageDirectory()+ "/Statoos/" + "Camera_image_" + f.format(c.getTime()) + ".jpeg");
+                cameraImageUri = Uri.fromFile(dir);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                //f.mkdirs();
+                //String filePath1 = f + "/"  + filename + ".jpeg";
+                //FileOutputStream fileOutputStream = null;
+                //try {
+                  //  fileOutputStream = new FileOutputStream(filePath1);
+                //} catch (FileNotFoundException e) {
+                  //  e.printStackTrace();
+               // }
+
+                //BufferedOutputStream bos = new BufferedOutputStream(fileOutputStream);
+
+                // compress image according to your format
+                //imageData.compress(Bitmap.CompressFormat.JPEG, 70, bos);
+
+                //try {
+                 //   bos.flush();
+                //} catch (IOException e) {
+                 //   e.printStackTrace();
+               // }
+                //try {
+                   // bos.close();
+               // } catch (IOException e) {
+                   // e.printStackTrace();
+                //}
+
+
             }
         });
 
@@ -475,16 +515,25 @@ import java.io.FileNotFoundException;
 
     }
 
-    protected boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    @SuppressLint("NewApi")
+    protected void checkPermission() {
+        for (String permission : PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(PERMISSIONS, MULTIPLE_PERMISSIONS);
+                return;
+            }
+        }
+
+        /*int result = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int result2 = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE);
         int result3 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (result == PackageManager.PERMISSION_GRANTED && result2 == PackageManager.PERMISSION_GRANTED
                 && result3 == PackageManager.PERMISSION_GRANTED) {
             return true;
-        } else {
-            return false;
         }
+        else {
+            return false;
+        }*/
 
     }
 
@@ -498,7 +547,7 @@ import java.io.FileNotFoundException;
             }
         }
 
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)){
             Toast.makeText(this, "Read External Storage permission allows us to do read images. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
         } else {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -506,7 +555,7 @@ import java.io.FileNotFoundException;
             }
         }
 
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CAMERA)) {
              Toast.makeText(this, "Take image from camera permission allows us to take images from camera. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
         } else {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -519,26 +568,16 @@ import java.io.FileNotFoundException;
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case 100:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            case 1:{
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                     //do your work
-                } else {
-                    Log.e("value", "Permission Denied, You cannot use local drive .");
-                }
-
-            case 111:
-                if (grantResults.length > 0 && grantResults[1] == PackageManager.PERMISSION_GRANTED){
-
                 } else {
                     Log.e("value", "Permission Denied, You cannot use local drive.");
                 }
+                return;
+            }
 
-            case MY_CAMERA_PERMISSION_CODE:
-                if(grantResults.length > 0 && grantResults[2] == PackageManager.PERMISSION_GRANTED){
 
-                } else {
-                    Log.e("value", "Camera Permission Denied.");
-                }
         }
     }
 
@@ -546,28 +585,38 @@ import java.io.FileNotFoundException;
      protected void onActivityResult(int requestCode, int resultCode, Intent data) {
          super.onActivityResult(requestCode, resultCode, data);
 
-         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-             Uri selectedImage = data.getData();
-             String[] filePathColumn = { MediaStore.Images.Media.DATA };
+         switch (requestCode) {
+             case RESULT_LOAD_IMAGE:
+                 if (resultCode == RESULT_OK && null != data) {
+                     Uri selectedImage = data.getData();
+                     String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
-             Cursor cursor = getContentResolver().query(selectedImage,
-                     filePathColumn, null, null, null);
-             cursor.moveToFirst();
+                     Cursor cursor = getContentResolver().query(selectedImage,
+                             filePathColumn, null, null, null);
+                     cursor.moveToFirst();
 
-             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-             picturePath = cursor.getString(columnIndex);
-             cursor.close();
+                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                     picturePath = cursor.getString(columnIndex);
+                     cursor.close();
 
-             //ImageView imageView = (ImageView) findViewById(R.id.imgView);
-             //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-             str_et.setBackground(Drawable.createFromPath(picturePath));
+                     //ImageView imageView = (ImageView) findViewById(R.id.imgView);
+                     //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+                     str_et.setBackground(Drawable.createFromPath(picturePath));
 
+                 }
+             case CAMERA_REQUEST:
+                 if(resultCode == RESULT_OK) {
+                     if(cameraImageUri != null){
+                         picturePath = cameraImageUri.getPath();
+                         str_et.setBackground(Drawable.createFromPath(picturePath));
+                         //Bitmap photo = (Bitmap) data.getExtras().get("data");
+                         //Drawable drawable=new BitmapDrawable(photo);
+                         //str_et.setBackground(drawable);
+                     }
+
+                 }
          }
 
-         if(requestCode == CAMERA_REQUEST && requestCode == RESULT_OK && null != data) {
-             Bitmap photo = (Bitmap) data.getExtras().get("data");
-
-         }
      }
 
      private final TextWatcher mTextEditorWatcher = new TextWatcher() {
