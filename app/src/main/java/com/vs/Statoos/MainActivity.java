@@ -64,11 +64,11 @@ import java.io.FileNotFoundException;
     TextView whiteColor, blueColor, greenColor, redColor, yellowColor, blackColor, backgroundImage, backgroundImage2,
              backgroundImage3, backgroundImage4, backgroundImage5, backgroundImage8, numberOfCharacters,
             circularWhiteColor, circularBlueColor, circularGreenColor, circularRedColor, circularYellowColor, circularBlackColor;
-    String filename, value, picturePath = null;
-     int currentLine;
+    String filename, picturePath = null;
+     //int currentLine;
      private AdView mAdViewMain;
-     private boolean isReached = false;
-     int characterMinus;
+     //private boolean isReached = false;
+     //int characterMinus;
      int textColor = -16777216;
      int btmColor = -1;
      int bitmapBackground = 0;
@@ -85,7 +85,7 @@ import java.io.FileNotFoundException;
      SimpleDateFormat f;
      private Uri cameraImageUri;
      public static final int MULTIPLE_PERMISSIONS = 1;
-     String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}; // List of permissions required
+     String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
 
 
     @Override
@@ -543,8 +543,6 @@ import java.io.FileNotFoundException;
                 }
                 return;
             }
-
-
         }
     }
 
@@ -569,8 +567,8 @@ import java.io.FileNotFoundException;
                      //ImageView imageView = (ImageView) findViewById(R.id.imgView);
                      //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
                      str_et.setBackground(Drawable.createFromPath(picturePath));
-
                  }
+
              case CAMERA_REQUEST:
                  if(resultCode == RESULT_OK) {
                      if(cameraImageUri != null){
@@ -808,7 +806,7 @@ import java.io.FileNotFoundException;
                 str_et.getText().delete(str_et.getText().length() - 1, str_et.getText().length());
                // Toast.makeText(getApplicationContext(), "You Don't exceed more than 8 lines", Toast.LENGTH_SHORT).show();
             }
-            else{
+            else {
                 //int length = str_et.getText().toString().trim().length();
                // numberOfCharacters.setText(String.valueOf(250 - s.length()));
             }

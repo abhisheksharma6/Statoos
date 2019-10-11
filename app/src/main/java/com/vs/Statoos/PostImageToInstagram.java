@@ -34,9 +34,9 @@ public class PostImageToInstagram extends AppCompatActivity {
     private AdView mAdViewPost;
     ImageView imageView,postImageToFacebook;
     Button saveGallery;
-    String ImagePath,data,filename,filePath,fontStyle="Helvetica_Neue.ttf", picturePath=null;
-    Bitmap bmp,image, finalImage;
-    int width;
+    String data,filename,filePath,fontStyle="Helvetica_Neue.ttf", picturePath=null;
+    Bitmap bmp,image;
+    //int width;
     int textColor, btmColor, backgroundImage=0;
 
     @Override
