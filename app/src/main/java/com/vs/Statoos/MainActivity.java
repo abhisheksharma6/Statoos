@@ -1,13 +1,18 @@
 package com.vs.Statoos;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -50,12 +55,11 @@ import java.io.FileNotFoundException;
     EditText str_et;
     Button mybtn;
     Bitmap bmp, image;
-    TextView numberOfCharacters;
     TextView whiteColor, blueColor, greenColor, redColor, yellowColor, blackColor, backgroundImage, backgroundImage2,
-             backgroundImage3, backgroundImage4, backgroundImage5, backgroundImage8,
+             backgroundImage3, backgroundImage4, backgroundImage5, backgroundImage8, numberOfCharacters,
             circularWhiteColor, circularBlueColor, circularGreenColor, circularRedColor, circularYellowColor, circularBlackColor;
-    String filename, value;
-    int currentLine;
+    String filename, value, picturePath = null;
+     int currentLine;
      private AdView mAdViewMain;
      private boolean isReached = false;
      int characterMinus;
@@ -64,8 +68,11 @@ import java.io.FileNotFoundException;
      int bitmapBackground = 0;
      View v;
      LinearLayout textColorLayout;
-     ImageView imageViewText, regularText, boldText, italicText;
+     ImageView imageViewText, regularText, boldText, italicText, imageGallery, photoCamera;
      private boolean isOpened = false;
+     private static final int RESULT_LOAD_IMAGE = 666;
+     private static final int CAMERA_REQUEST = 1888;
+     private static final int MY_CAMERA_PERMISSION_CODE = 1001;
      Typeface type;
      String fontStyle = "Helvetica_Neue.ttf";
 
@@ -102,6 +109,8 @@ import java.io.FileNotFoundException;
         backgroundImage5 = (TextView) findViewById(R.id.background_image5);
         backgroundImage8 = (TextView) findViewById(R.id.background_image8);
         imageViewText = (ImageView) findViewById(R.id.imageViewText);
+        imageGallery = (ImageView) findViewById(R.id.imageGallery);
+        photoCamera = (ImageView) findViewById(R.id.photoCamera);
         textColorLayout = (LinearLayout) findViewById(R.id.textColorLayout);
         regularText = (ImageView) findViewById(R.id.regularText);
         boldText = (ImageView) findViewById(R.id.boldText);
@@ -187,7 +196,7 @@ import java.io.FileNotFoundException;
 
                 //converting text to bitmap image here
                  bmp = convert.textAsBitmap(data, 32, 5, textColor, btmColor,
-                        type, bitmapBackground);
+                        type, bitmapBackground, picturePath);
 
                 //passing border size 0 because we dont need the image borders
                  image = convert.addBorder(bmp, 0, Color.BLACK);
@@ -210,6 +219,7 @@ import java.io.FileNotFoundException;
 
                 Intent intent = new Intent(MainActivity.this, PostImageToInstagram.class);
                 intent.putExtra("BitmapImage", data);
+                intent.putExtra("FilePath", picturePath);
                 intent.putExtra("FontStyle", fontStyle);
                 intent.putExtra("textColor1", textColor);
                 intent.putExtra("btmColor1", btmColor);
@@ -222,11 +232,11 @@ import java.io.FileNotFoundException;
         whiteColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 v.setBackgroundResource(R.drawable.edittext_background);
                 str_et.setBackground(v.getBackground());
                 btmColor = Color.WHITE;
                 bitmapBackground = 0;
+                picturePath = null;
             }
         });
 
@@ -237,6 +247,7 @@ import java.io.FileNotFoundException;
                 str_et.setBackground(v.getBackground());
                 btmColor = Color.BLUE;
                 bitmapBackground = 0;
+                picturePath = null;
             }
         });
 
@@ -247,6 +258,7 @@ import java.io.FileNotFoundException;
                 str_et.setBackground(v.getBackground());
                 btmColor = Color.GREEN;
                 bitmapBackground = 0;
+                picturePath = null;
             }
         });
 
@@ -257,6 +269,7 @@ import java.io.FileNotFoundException;
                 str_et.setBackground(v.getBackground());
                 btmColor = Color.RED;
                 bitmapBackground = 0;
+                picturePath = null;
             }
         });
 
@@ -267,6 +280,7 @@ import java.io.FileNotFoundException;
                 str_et.setBackground(v.getBackground());
                 btmColor = Color.YELLOW;
                 bitmapBackground = 0;
+                picturePath = null;
             }
         });
 
@@ -277,6 +291,7 @@ import java.io.FileNotFoundException;
                 str_et.setBackground(v.getBackground());
                 btmColor = Color.BLACK;
                 bitmapBackground = 0;
+                picturePath = null;
             }
         });
 
@@ -286,6 +301,7 @@ import java.io.FileNotFoundException;
                 v.setBackgroundResource(R.drawable.backgroundimage);
                 str_et.setBackground(v.getBackground());
                 bitmapBackground = R.drawable.backgroundimage;
+                picturePath = null;
             }
         });
 
@@ -295,6 +311,7 @@ import java.io.FileNotFoundException;
                 v.setBackgroundResource(R.drawable.backgroundimage2);
                 str_et.setBackground(v.getBackground());
                 bitmapBackground = R.drawable.backgroundimage2;
+                picturePath = null;
             }
         });
 
@@ -304,6 +321,7 @@ import java.io.FileNotFoundException;
                 v.setBackgroundResource(R.drawable.backgroundimage3);
                 str_et.setBackground(v.getBackground());
                 bitmapBackground = R.drawable.backgroundimage3;
+                picturePath = null;
             }
         });
 
@@ -313,6 +331,7 @@ import java.io.FileNotFoundException;
                 v.setBackgroundResource(R.drawable.backgroundimage4);
                 str_et.setBackground(v.getBackground());
                 bitmapBackground = R.drawable.backgroundimage4;
+                picturePath = null;
             }
         });
 
@@ -322,6 +341,7 @@ import java.io.FileNotFoundException;
                 v.setBackgroundResource(R.drawable.backgroundimage5);
                 str_et.setBackground(v.getBackground());
                 bitmapBackground = R.drawable.backgroundimage5;
+                picturePath = null;
             }
         });
 
@@ -331,6 +351,7 @@ import java.io.FileNotFoundException;
                 v.setBackgroundResource(R.drawable.backgroundimage8);
                 str_et.setBackground(v.getBackground());
                 bitmapBackground = R.drawable.backgroundimage8;
+                picturePath = null;
             }
         });
 
@@ -344,6 +365,27 @@ import java.io.FileNotFoundException;
                     textColorLayout.setVisibility(LinearLayout.GONE);
                 }
 
+            }
+        });
+
+        imageGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bitmapBackground = 0;
+                Intent i = new Intent(
+                        Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });
+
+        photoCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bitmapBackground = 0;
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
         });
 
@@ -435,11 +477,15 @@ import java.io.FileNotFoundException;
 
     protected boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (result == PackageManager.PERMISSION_GRANTED) {
+        int result2 = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE);
+        int result3 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (result == PackageManager.PERMISSION_GRANTED && result2 == PackageManager.PERMISSION_GRANTED
+                && result3 == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
             return false;
         }
+
     }
 
     protected void requestPermission() {
@@ -451,9 +497,23 @@ import java.io.FileNotFoundException;
                 requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
             }
         }
+
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
+            Toast.makeText(this, "Read External Storage permission allows us to do read images. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
+        } else {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 111);
+            }
+        }
+
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+             Toast.makeText(this, "Take image from camera permission allows us to take images from camera. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
+        } else {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                 requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
+            }
+        }
     }
-
-
 
 
     @Override
@@ -465,12 +525,52 @@ import java.io.FileNotFoundException;
                 } else {
                     Log.e("value", "Permission Denied, You cannot use local drive .");
                 }
-                break;
+
+            case 111:
+                if (grantResults.length > 0 && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+
+                } else {
+                    Log.e("value", "Permission Denied, You cannot use local drive.");
+                }
+
+            case MY_CAMERA_PERMISSION_CODE:
+                if(grantResults.length > 0 && grantResults[2] == PackageManager.PERMISSION_GRANTED){
+
+                } else {
+                    Log.e("value", "Camera Permission Denied.");
+                }
         }
     }
 
+     @Override
+     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+         super.onActivityResult(requestCode, resultCode, data);
 
-    private final TextWatcher mTextEditorWatcher=new TextWatcher() {
+         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+             Uri selectedImage = data.getData();
+             String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+             Cursor cursor = getContentResolver().query(selectedImage,
+                     filePathColumn, null, null, null);
+             cursor.moveToFirst();
+
+             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+             picturePath = cursor.getString(columnIndex);
+             cursor.close();
+
+             //ImageView imageView = (ImageView) findViewById(R.id.imgView);
+             //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+             str_et.setBackground(Drawable.createFromPath(picturePath));
+
+         }
+
+         if(requestCode == CAMERA_REQUEST && requestCode == RESULT_OK && null != data) {
+             Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+         }
+     }
+
+     private final TextWatcher mTextEditorWatcher = new TextWatcher() {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {

@@ -34,7 +34,7 @@ public class PostImageToInstagram extends AppCompatActivity {
     private AdView mAdViewPost;
     ImageView imageView,postImageToFacebook;
     Button saveGallery;
-    String ImagePath,data,filename,filePath,fontStyle="Helvetica_Neue.ttf";
+    String ImagePath,data,filename,filePath,fontStyle="Helvetica_Neue.ttf", picturePath=null;
     Bitmap bmp,image, finalImage;
     int width;
     int textColor, btmColor, backgroundImage=0;
@@ -52,8 +52,9 @@ public class PostImageToInstagram extends AppCompatActivity {
         saveGallery = (Button) findViewById(R.id.saveToGallary);
         imageView = (ImageView) findViewById(R.id.image1);
         Intent intent = getIntent();
-     //   Bitmap image = (Bitmap) intent.getParcelableExtra("BitmapImage");
+        //Bitmap image = (Bitmap) intent.getParcelableExtra("BitmapImage");
         data =  intent.getStringExtra("BitmapImage");
+        picturePath = intent.getStringExtra("FilePath");
         fontStyle = intent.getStringExtra("FontStyle");
         textColor = intent.getIntExtra("textColor1", 0);
         btmColor = intent.getIntExtra("btmColor1", 0);
@@ -61,13 +62,13 @@ public class PostImageToInstagram extends AppCompatActivity {
 
         Converter convert = new Converter(getApplicationContext());
 
-        // text , size , stroke ,color,typeface
+        //text , size , stroke ,color,typeface
         bmp = convert.textAsBitmap(data, 32, 5, textColor, btmColor,
-                Typeface.createFromAsset(getAssets(), fontStyle), backgroundImage);
+                Typeface.createFromAsset(getAssets(), fontStyle), backgroundImage, picturePath);
         image = convert.addBorder(bmp, 0, Color.BLACK);
-       // finalImage = createSquaredBitmap(image);
+         //finalImage = createSquaredBitmap(image);
         //BitmapDrawable ob = new BitmapDrawable(getResources(), image);
-      //  imageView.setBackgroundDrawable(ob);
+        //imageView.setBackgroundDrawable(ob);
         imageView.setImageBitmap(image);
         // file name appending with system date
 
@@ -110,22 +111,22 @@ public class PostImageToInstagram extends AppCompatActivity {
 
             @Override
             public void onAdClosed() {
-                Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Ad is closed!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-               Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
+               //Toast.makeText(getApplicationContext(), "Ad failed to load! error code: " + errorCode, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdLeftApplication() {
-                Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Ad left application!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdOpened() {
-                Toast.makeText(getApplicationContext(), "Ad is opened!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Ad is opened!", Toast.LENGTH_SHORT).show();
             }
         });
 

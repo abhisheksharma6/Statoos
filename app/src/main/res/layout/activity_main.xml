@@ -93,6 +93,26 @@
             android:layout_marginLeft="10dp"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:src="@drawable/imagegallery"
+            android:id="@+id/imageGallery"
+            >
+
+        </ImageView>
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/photocamera"
+            android:id="@+id/photoCamera"
+            >
+
+        </ImageView>
+
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/type"
             android:id="@+id/imageViewText"
             >

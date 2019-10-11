@@ -27,13 +27,15 @@ public class Converter {
     Context ctx;
     Canvas canvas;
     Bitmap image, returnedBitmap;
+    Bitmap b2 = null;
+    int AdditionHeightWidth = 0;
 
     public Converter(Context context){
         ctx = context;
     }
 
     public Bitmap textAsBitmap(String text, float textSize, float stroke,
-                               int color, int btmColor, Typeface typeface, int backgroundImage) {
+                               int color, int btmColor, Typeface typeface, int backgroundImage, String picturePath) {
 
         TextPaint paint = new TextPaint();
         paint.setColor(color);
@@ -62,14 +64,17 @@ public class Converter {
 
         int linecount = staticLayout.getLineCount();
         height = staticLayout.getHeight();
-        if(height>400){
+
+        if(height > 400){
             height = (int) (baseline + paint.descent() + 5) * linecount + 7;
-        }else{
+        } else{
             height = 400;
         }
+
         if(linecount<=3){
             heightHalf = linecount/2 + 130;
-        }else if(linecount>3 && linecount<=5){
+        }
+        else if(linecount>3 && linecount<=5){
             heightHalf = linecount/2 + 120;
         }
         else if(linecount>5 && linecount<9){
@@ -97,17 +102,16 @@ public class Converter {
         canvas.drawARGB(0xFF, 0xFF, 0xFF, 0xFF);
         canvas.drawBitmap(image, 0, 0, p);*/
         Paint p = new Paint();
-        if(backgroundImage != 0){
-            Bitmap b2 = null;
-            int AdditionHeightWidth = 0;
-            mBackground = BitmapFactory.decodeResource(ctx.getResources(), backgroundImage).copy(Bitmap.Config.ARGB_8888, true);
+
+        if(picturePath != null){
+            mBackground = BitmapFactory.decodeFile(picturePath).copy(Bitmap.Config.ARGB_8888, true);
             // original measurements
             int origWidth = mBackground.getWidth();
             int origHeight = mBackground.getHeight();
             final int destWidth = 400;
             if(origWidth > destWidth){
                 if(height > 400){
-                     AdditionHeightWidth = 100;
+                    AdditionHeightWidth = 100;
                 }
                 //origHeight/( origWidth / destWidth ) + AdditionHeightWidth
                 int destHeight = height;
@@ -121,12 +125,37 @@ public class Converter {
             returnedBitmap = b2;
 
         } else {
-            canvas = new Canvas(image);
-            ColorFilter filter = new LightingColorFilter(btmColor, 1);
-            p.setColorFilter(filter);
-            canvas.drawARGB(0xFF, 0xFF, 0xFF, 0xFF);
-            canvas.drawBitmap(image, 0, 0, p);
-            returnedBitmap = image;
+            if(backgroundImage != 0){
+
+                mBackground = BitmapFactory.decodeResource(ctx.getResources(), backgroundImage).copy(Bitmap.Config.ARGB_8888, true);
+                // original measurements
+                int origWidth = mBackground.getWidth();
+                int origHeight = mBackground.getHeight();
+                final int destWidth = 400;
+                if(origWidth > destWidth){
+                    if(height > 400){
+                        AdditionHeightWidth = 100;
+                    }
+                    //origHeight/( origWidth / destWidth ) + AdditionHeightWidth
+                    int destHeight = height;
+                    b2 = Bitmap.createScaledBitmap(mBackground, destWidth + AdditionHeightWidth, destHeight, false);
+                    ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                    b2.compress(Bitmap.CompressFormat.JPEG,80, outStream);
+                }
+                canvas = new Canvas(b2);
+                canvas.drawBitmap(image, 0, 0, p);
+                //canvas.drawBitmap(image, 0, 0, p);
+                returnedBitmap = b2;
+
+            } else {
+                canvas = new Canvas(image);
+                ColorFilter filter = new LightingColorFilter(btmColor, 1);
+                p.setColorFilter(filter);
+                canvas.drawARGB(0xFF, 0xFF, 0xFF, 0xFF);
+                canvas.drawBitmap(image, 0, 0, p);
+                returnedBitmap = image;
+
+            }
 
         }
 
